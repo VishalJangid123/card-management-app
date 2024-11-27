@@ -1,62 +1,74 @@
 import React from 'react';
 import { TextInput, Text, View } from 'react-native';
-import { Controller } from 'react-hook-form';
 import { TextInputMask } from 'react-native-masked-text';
 
 type CustomInputProps = {
-  control: any;
   label: string;
-  name: string;
+  value: string;
+  onChangeText: (text: string) => void;
   placeholder: string;
   error?: string;
   mask?: string;
   keyboardType?: string;
   maxLength?: number;
   onBlur?: () => void;
-  children?: any
-  style? : {}
+  children?: any;
+  style?: {};
 };
 
-export default function CustomInput({ control, label, name, placeholder, error, mask, keyboardType, maxLength, onBlur, children, style } : CustomInputProps) {
+export default function CustomInput({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  error,
+  mask,
+  keyboardType,
+  maxLength,
+  onBlur,
+  children,
+  style,
+}: CustomInputProps) {
   return (
-    <View className="mb-4">
-      <Controller
-        control={control}
-        name={name}
-        render={({ field: { onChange, value } }) => (
-          <View>
-            <Text className='font-bold mb-1 text-lg' >{label}</Text>
-            {mask ? (
-              <TextInputMask
-                type="custom"
-                options={{ mask }}
-                className="border border-gray-300 p-3 rounded"
-                style={{borderWidth: 1, borderColor: "#d1d5db", padding: 12, ...style}}
-                placeholder={placeholder}
-                keyboardType={keyboardType}
-                value={value}
-                onChangeText={onChange}
-                maxLength={maxLength}
-                onBlur={onBlur}
-              />
-            ) : (
-              <TextInput
-                className="border border-gray-300 p-3 rounded"
-                placeholder={placeholder}
-                keyboardType={keyboardType}
-                value={value}
-                onChangeText={onChange}
-                maxLength={maxLength}
-                onBlur={onBlur}
-                style={{...style}}
-              />
-            )}
-            {children}
-            {error && <Text className="text-red-500 text-xs">{error}</Text>}
-          </View>
-        )}
-      />
+    <View style={{ marginBottom: 16 }}>
+      <Text style={{ fontWeight: 'bold', marginBottom: 4, fontSize: 16 }}>{label}</Text>
+      {mask ? (
+        <TextInputMask
+          type="custom"
+          options={{ mask }}
+          style={{
+            borderWidth: 1,
+            borderColor: error ? 'red' : '#d1d5db',
+            padding: 12,
+            borderRadius: 4,
+            ...style,
+          }}
+          placeholder={placeholder}
+          keyboardType={keyboardType}
+          value={value}
+          onChangeText={onChangeText}
+          maxLength={maxLength}
+          onBlur={onBlur}
+        />
+      ) : (
+        <TextInput
+          style={{
+            borderWidth: 1,
+            borderColor: error ? 'red' : '#d1d5db',
+            padding: 12,
+            borderRadius: 4,
+            ...style,
+          }}
+          placeholder={placeholder}
+          keyboardType={keyboardType}
+          value={value}
+          onChangeText={onChangeText}
+          maxLength={maxLength}
+          onBlur={onBlur}
+        />
+      )}
+      {children}
+      {error && <Text style={{ color: 'red', fontSize: 12 }}>{error}</Text>}
     </View>
   );
-};
-
+}
