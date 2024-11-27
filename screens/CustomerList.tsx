@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { useCustomer } from 'context/CustomerContext';
 import { useNavigation } from '@react-navigation/native';
@@ -44,12 +44,11 @@ export default function CustomerList() {
   };
 
   const addTestCustomer = () => {
-    console.log('addTestCustomer');
+    // This is to add a test customer with email so that we can quickly create customer and add cards
     setCustomerEmail('test@test.com');
     OnAddCustomerButtonClicked();
   };
 
-  console.log(customers);
   return (
     <SafeAreaView>
       {customers.length > 0 && (
@@ -80,22 +79,26 @@ export default function CustomerList() {
             </View>
           </View>
         ) : (
-          customers.map((item, index) => (
-            <View className="flex h-full justify-start">
-              <View className="elevation-lg bg-white p-3">
-                <Text className="text-lg font-bold">{item.email}</Text>
-              </View>
+          <View className="flex h-full justify-start">
+            <ScrollView>
+            {customers.map((item, index) => (
               <TouchableOpacity
-                className="bg-primary elevation-xl absolute bottom-40 left-14 rounded-2xl p-3"
-                onPress={() => setShowAddCustomerModel(true)}>
-                <Text className="text-center text-xl font-bold  text-white">
-                  Add new customer by email
-                </Text>
+                key={index}
+                onPress={() => navigation.navigate('CardList', { customerId: item.id })}
+                className="elevation-lg bg-white p-3">
+                <Text className="text-lg font-bold">{item.email}</Text>
               </TouchableOpacity>
-            </View>
-          ))
+            ))}
+            </ScrollView>
+          </View>
         )}
       </View>
+
+      <TouchableOpacity
+        className="bg-primary elevation-xl absolute bottom-40 left-20 rounded-2xl p-3"
+        onPress={() => setShowAddCustomerModel(true)}>
+        <Text className="text-center text-xl font-bold  text-white">Add new customer by email</Text>
+      </TouchableOpacity>
 
       <CustomModal
         isVisible={showAddCustomerModel}
