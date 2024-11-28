@@ -17,8 +17,6 @@ app.use(bodyParser.json());
 
 app.post('/create-charge', async (req, res) => {
   const { amount, currency, cardToken, customer } = req.body;
-  console.log(amount, currency, customer)
-
   if (!amount || !currency || !customer) {
     return res.status(400).send('Missing required fields');
   }
