@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCustomer } from 'context/CustomerContext';
 import { useNavigation } from '@react-navigation/native';
 import CustomModal from 'components/CustomModal';
@@ -16,9 +16,13 @@ export default function CustomerList() {
 
   // Navigation and routing
   const navigation = useNavigation();
-  navigation.setOptions({
-    headerShown: false,
-  });
+  useEffect(()=> {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  },[])
+
+  
 
   // States
   const [showAddCustomerModel, setShowAddCustomerModel] = useState(false);
@@ -27,20 +31,15 @@ export default function CustomerList() {
 
   // Functions
   const OnAddCustomerButtonClicked = async () => {
-    console.log(customerEmail);
     let isValid = validateEmail(customerEmail);
     if (isValid) {
       setEmailError('');
       const customer = await createCustomer(customerEmail);
-      console.log(customer);
       setEmailError(error);
       setCustomerEmail('');
-      // make api call
     } else {
       setEmailError('Invalid Error');
     }
-    console.log(isValid);
-    console.log(emailError);
   };
 
   const addTestCustomer = () => {
@@ -64,9 +63,11 @@ export default function CustomerList() {
 
             <View className="item-center flex h-[50%] content-center justify-center ">
               <TouchableOpacity
-                className="bg-primary elevation-xl rounded-2xl p-3"
+                className="elevation-xl rounded-2xl bg-primary p-3"
                 onPress={() => setShowAddCustomerModel(true)}>
-                <Text className="text-center text-xl font-bold  text-white">
+                <Text
+                  style={{ fontFamily: 'FCSubjectRoundedNoncml-Bold', fontWeight: 100 }}
+                  className="font-FC-bold text-center text-xl text-white">
                   Add new customer by email
                 </Text>
               </TouchableOpacity>
@@ -79,25 +80,34 @@ export default function CustomerList() {
             </View>
           </View>
         ) : (
+
+          <View className='gap-5'>
+            <View>
+              <Text className='text-2xl font-bold'>All Customers</Text>
+            </View>
           <View className="flex h-full justify-start">
             <ScrollView>
-            {customers.map((item, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => navigation.navigate('CardList', { customerId: item.id })}
-                className="elevation-lg bg-white p-3">
-                <Text className="text-lg font-bold">{item.email}</Text>
-              </TouchableOpacity>
-            ))}
+              {customers.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  onPress={() => navigation.navigate('CardList', { customerId: item.id })}
+                  className="elevation-lg bg-white p-3">
+                  <Text className="text-lg font-bold">{item.email}</Text>
+                </TouchableOpacity>
+              ))}
             </ScrollView>
+          </View>
           </View>
         )}
       </View>
 
+     
       <TouchableOpacity
-        className="bg-primary elevation-xl absolute bottom-40 left-20 rounded-2xl p-3"
+        className="elevation-xl absolute bottom-40 left-20 rounded-full bg-primary p-3"
         onPress={() => setShowAddCustomerModel(true)}>
-        <Text className="text-center text-xl font-bold  text-white">Add new customer by email</Text>
+        <Text className="font-FC-bold text-center text-xl font-bold  text-white">
+          Add new customer by email
+        </Text>
       </TouchableOpacity>
 
       <CustomModal
