@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {
   ActivityIndicator,
@@ -30,9 +30,11 @@ export default function Overview({ route }) {
 
   // Navigation
   const navigation = useNavigation<OverviewScreenNavigationProps>();
-  navigation.setOptions({
-    headerShown: false,
-  });
+  useEffect(()=> {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  },[])
 
   // State
   const [cards, setAllCards] = useState([]);
@@ -52,6 +54,16 @@ export default function Overview({ route }) {
     } else console.log('No customer params recv.');
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchResponse = async () => {
+        const res = await getCardsForCustomer(route.params.customerId).then((data) => {
+          setAllCards(data);
+        });
+      };
+      fetchResponse();
+    }, []))
+
   // Function
   const handlePayment = async () => {
     const result = await createCharge(route.params.customerId, randomAmount * 100);
@@ -64,27 +76,24 @@ export default function Overview({ route }) {
 
   return (
     <SafeAreaView>
-      <View className="flex gap-5 p-5">
+      <View className="flex-auto gap-5 p-5">
         {/* Header */}
         <View className="flex-row items-center justify-between">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Feather name="arrow-left" size={25} />
           </TouchableOpacity>
           <Text className="text-lg font-bold">Cards</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity onPress={() => navigation.navigate('AddCard', { params: route.params.customerId })}>
             <Feather name="plus" size={30} />
           </TouchableOpacity>
         </View>
 
-        <View className="absolute bottom-48 left-1/2 z-10 -translate-x-1/2 transform  rounded-full p-4 text-white shadow-lg ">
-          <Button
-            onPress={() => setShowPayModal(true)}
-            className="flex w-40 content-center items-center justify-center"
-            title="Pay"
-          />
-        </View>
+     
+      
 
-        {cards !== undefined ? (
+        {cards && cards.length > 0 ? (
+          <View className='h-full justify-between'>
+          <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <View className="flex h-full gap-5">
             <ScrollView contentContainerStyle={{ flexGrow: 1, gap: 20 }}>
               {cards.map((item, index) => (
@@ -94,22 +103,22 @@ export default function Overview({ route }) {
                     setShowPayModal(true);
                   }}
                   key={index}
-                  className="elevation-xl h-56 w-full gap-3 rounded-xl bg-white p-9 shadow shadow-gray-300">
-                  <Image className="h-10 w-20" source={getBrandLogo(item.brand)} />
+                  className="elevation-xl h-52 w-full gap-3 rounded-xl bg-white p-9 shadow shadow-gray-300">
+                  <Image className="h-5 w-16" source={getBrandLogo(item.brand)} />
                   <View className="mb-2 flex-row gap-5">
-                    <Text className="text-2xl font-bold text-gray-600">••••</Text>
-                    <Text className="text-2xl font-bold text-gray-600">••••</Text>
-                    <Text className="text-2xl font-bold text-gray-600">••••</Text>
-                    <Text className="text-2xl text-gray-600">{item.last_digits}</Text>
+                    <Text className="text-2xl font-bold text-c-gray-1">••••</Text>
+                    <Text className="text-2xl font-bold text-c-gray-1">••••</Text>
+                    <Text className="text-2xl font-bold text-c-gray-1">••••</Text>
+                    <Text className="text-2xl text-c-gray-1">{item.last_digits}</Text>
                   </View>
                   <View className="flex-row justify-between">
-                    <View className="gap-3">
-                      <Text className="text-gray-400">Name on Card</Text>
-                      <Text className="text-lg font-bold">{item.name}</Text>
+                    <View className="gap-5">
+                      <Text className="text-c-gray-2 text-xs">Name on Card</Text>
+                      <Text className="text-sm font-bold">{item.name}</Text>
                     </View>
-                    <View className="gap-3">
-                      <Text className="text-gray-400">Expires</Text>
-                      <Text className="text-lg font-bold">
+                    <View className="gap-5">
+                      <Text className="text-c-gray-2 text-xs">Expires</Text>
+                      <Text className="text-sm font-bold">
                         {item.expiration_month}/{item.expiration_year}
                       </Text>
                     </View>
@@ -118,11 +127,24 @@ export default function Overview({ route }) {
               ))}
             </ScrollView>
           </View>
+          </ScrollView>
+            <View className="
+            bottom-20
+            absolute left-1/2 z-10 -translate-x-1/2 transform  rounded-full p-4 text-white ">
+            <Button
+              onPress={() => setShowPayModal(true)}
+              className="flex w-80 content-center items-center justify-center"
+              title="Pay"
+            />
+          </View>
+          </View>
+
         ) : (
           // No cards
-          <View className="h-[90%] items-center justify-center">
-            <Text>No Cards found.</Text>
-            <Text>We recommend adding card for easy payment</Text>
+          <View className="h-[90%] items-center justify-center gap-5">
+            <Text className='text-4xl'>💳</Text>
+            <Text className='text-lg'>No Cards found.</Text>
+            <Text className='text-lg text-center'>We recommend adding a card {"\n"} for easy payment.</Text>
             <TouchableOpacity
               className=""
               onPress={() => navigation.navigate('AddCard', { params: route.params.customerId })}>
