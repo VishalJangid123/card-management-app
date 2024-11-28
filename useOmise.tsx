@@ -75,7 +75,7 @@ const useOmise = () => {
       );
       return response.data.data;
     } catch (err) {
-      console.log(err)
+      console.log(err);
       setError(err.response?.data?.message || 'An error occurred');
       throw err;
     } finally {
@@ -83,17 +83,17 @@ const useOmise = () => {
     }
   };
 
-  const createCardToken = async (
+  const createCardTokenAndAttachToCustomer = async (
     name: string,
     cardNumber: string,
     expiryMonth: string,
     expiryYear: string,
     cardCvc: string,
-    customerId : string
+    customerId: string
   ): Promise<OmiseCardToken> => {
     setLoading(true);
     setError(null);
-    console.log("create token")
+    console.log('create token');
     try {
       const response = await axios.post<OmiseResponse<OmiseCardToken>>(
         'https://vault.omise.co/tokens',
@@ -114,25 +114,55 @@ const useOmise = () => {
         }
       );
       const tokenId = response.data.id;
-      console.log("token", tokenId)
-      const url = `https://api.omise.co/customers/${customerId}`
-      console.log("URL ",url)
+      console.log('token', tokenId);
+      const url = `https://api.omise.co/customers/${customerId}`;
+      console.log('URL ', url);
       const result = await axios.patch(
         url,
-        {card: tokenId},
+        { card: tokenId },
         {
           auth: {
             username: secretKey,
             password: '',
           },
-        })
+        }
+      );
 
-      console.log(result.data)
+      console.log(result.data);
       // Attach to customer
       return result.data;
     } catch (err) {
-      console.log(err)
-      console.log(err.response)
+      console.log(err);
+      console.log(err.response);
+      setError(err.response?.data?.message || 'An error occurred');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createCharge = async (customerId: string, amount: Number): Promise<OmiseCardToken> => {
+    setLoading(true);
+    setError(null);
+    console.log('create token');
+    try {
+      try {
+        const paymentResponse = await axios.post(
+          'http://localhost:3000/create-charge', // Replace with your backend server
+          {
+            amount,
+            currency: 'thb',
+            customer: customerId,
+          }
+        );
+        return paymentResponse.data;
+      } catch (err) {
+        setError(err.paymentResponse?.data?.message || 'An error occurred');
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    } catch (err) {
       setError(err.response?.data?.message || 'An error occurred');
       throw err;
     } finally {
@@ -143,7 +173,8 @@ const useOmise = () => {
   return {
     createCustomer,
     getCardsForCustomer,
-    createCardToken,
+    createCardToken: createCardTokenAndAttachToCustomer,
+    createCharge,
     error,
     loading,
   };
