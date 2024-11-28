@@ -26,8 +26,8 @@ type OmiseCardToken = {
   };
 };
 
-const publicKey = ''; // Add key
-const secretKey = '';
+const publicKey = process.env.EXPO_PUBLIC_OMISE_PUBLIC_KEY;
+const secretKey = process.env.EXPO_PUBLIC_OMISE_SECRET_KEY;
 
 const useOmise = () => {
   const { addCustomer } = useCustomer();
@@ -93,7 +93,6 @@ const useOmise = () => {
   ): Promise<OmiseCardToken> => {
     setLoading(true);
     setError(null);
-    console.log('create token');
     try {
       const response = await axios.post<OmiseResponse<OmiseCardToken>>(
         'https://vault.omise.co/tokens',
@@ -114,9 +113,7 @@ const useOmise = () => {
         }
       );
       const tokenId = response.data.id;
-      console.log('token', tokenId);
       const url = `https://api.omise.co/customers/${customerId}`;
-      console.log('URL ', url);
       const result = await axios.patch(
         url,
         { card: tokenId },
@@ -128,12 +125,9 @@ const useOmise = () => {
         }
       );
 
-      console.log(result.data);
       // Attach to customer
       return result.data;
     } catch (err) {
-      console.log(err);
-      console.log(err.response);
       setError(err.response?.data?.message || 'An error occurred');
       throw err;
     } finally {
@@ -144,7 +138,6 @@ const useOmise = () => {
   const createCharge = async (customerId: string, amount: Number): Promise<OmiseCardToken> => {
     setLoading(true);
     setError(null);
-    console.log('create token');
     try {
       try {
         const paymentResponse = await axios.post(
