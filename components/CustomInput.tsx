@@ -30,17 +30,19 @@ export default function CustomInput({
   style,
 }: CustomInputProps) {
   return (
-    <View style={{ marginBottom: 16 }}>
-      <Text style={{ fontWeight: 'bold', marginBottom: 4, fontSize: 16 }}>{label}</Text>
+    <View style={{ marginBottom: 16, gap:4 }}>
+      <Text style={{ fontWeight: 'bold', marginBottom: 4, fontSize: 15 }}>{label}</Text>
       {mask ? (
         <TextInputMask
           type="custom"
           options={{ mask }}
           style={{
+            fontSize: "16",
             borderWidth: 1,
             borderColor: error ? 'red' : '#d1d5db',
-            padding: 12,
+            padding: 18,
             borderRadius: 4,
+            fontFamily: 'FCSubjectRoundedNoncml-Reg',
             ...style,
           }}
           placeholder={placeholder}
@@ -54,9 +56,11 @@ export default function CustomInput({
         <TextInput
           style={{
             borderWidth: 1,
+            fontSize: "16",
             borderColor: error ? 'red' : '#d1d5db',
-            padding: 12,
+            padding: 18,
             borderRadius: 4,
+            fontFamily: 'FCSubjectRoundedNoncml-Reg',
             ...style,
           }}
           placeholder={placeholder}
