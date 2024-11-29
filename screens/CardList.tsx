@@ -8,11 +8,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text
 } from 'react-native';
 
 import { RootStackParamList } from '../navigation';
 
-import { Text } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import useOmise from 'useOmise';
 import { Feather } from '@expo/vector-icons';
@@ -20,14 +20,16 @@ import { getBrandLogo } from 'Constants/GetBrandLogo';
 import CustomModal from 'components/CustomModal';
 import { Button } from 'components/Button';
 
+import io from 'socket.io-client';
+import axios from 'axios';
+
 type OverviewScreenNavigationProps = StackNavigationProp<RootStackParamList, 'CardList'>;
 
 export default function Overview({ route }) {
   // Use Custom Hooks
   const { getCardsForCustomer, createCharge, loading } = useOmise();
 
-  const [paymentStatus, setPaymentStatus] = useState();
-
+  const [paymentStatus, setPaymentStatus] = useState({});
   // Navigation
   const navigation = useNavigation<OverviewScreenNavigationProps>();
   useEffect(()=> {
@@ -64,10 +66,26 @@ export default function Overview({ route }) {
       fetchResponse();
     }, []))
 
+
+    useEffect(() => {
+      const socket = io('http://localhost:3000');  // Change to your server URL
+      const clientId = route.params.customerId
+      socket.emit('subscribe', clientId);
+
+      socket.on('paymentStatusUpdate', (status) => {
+        console.log("status",status)  
+        setPaymentStatus(status);
+      });
+
+      return () => {
+          socket.disconnect();
+      };
+  }, []);
+
+
   // Function
   const handlePayment = async () => {
     const result = await createCharge(route.params.customerId, randomAmount * 100);
-    setPaymentStatus(result.charge);
   };
 
   const randomizeAmount = (min, max) => {
@@ -88,14 +106,15 @@ export default function Overview({ route }) {
           </TouchableOpacity>
         </View>
 
-     
-      
-
         {cards && cards.length > 0 ? (
           <View className='h-full justify-between'>
           <ScrollView contentContainerStyle={{flexGrow: 1}}>
           <View className="flex h-full gap-5">
-            <ScrollView contentContainerStyle={{ flexGrow: 1, gap: 20 }}>
+            <ScrollView 
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            scrollEnabled={false}
+            contentContainerStyle={{ flexGrow: 1, gap: 20, paddingBottom: 160 }}>
               {cards.map((item, index) => (
                 <TouchableOpacity
                   onPress={() => {
@@ -154,9 +173,9 @@ export default function Overview({ route }) {
         )}
       </View>
         {/* Modal for paying */}
-      <CustomModal isVisible={showPayModal} height="h-[50%]" onClose={() => setShowPayModal(false)}>
+      <CustomModal isVisible={showPayModal} height="h-[50%]" onClose={() => { setShowPayModal(false); setPaymentStatus({})}}>
         <TouchableOpacity
-          onPress={() => setShowPayModal(false)}
+          onPress={() => { setShowPayModal(false); setPaymentStatus({})} }
           className="absolute right-10 top-10">
           <Feather name="x" size={25} />
         </TouchableOpacity>
@@ -173,14 +192,21 @@ export default function Overview({ route }) {
             onPress={() => handlePayment()}></Button>
           {loading && <ActivityIndicator size="large"></ActivityIndicator>}
 
-          {paymentStatus && (
+          {paymentStatus !== undefined && (
             <Text
               className={`
-                mt-5 text-center font-bold
-                ${paymentStatus.status === 'successful' ? 'text-green-400' : 'text-red-400'}`}>
-              Payment {paymentStatus.status}{' '}
+                mt-5 text-center font-bold text-lg
+                ${paymentStatus.status === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+               {paymentStatus.status && "Payment " + paymentStatus.status }
             </Text>
-          )}
+            )}
+            {
+              paymentStatus !== undefined &&
+              paymentStatus.status === 'success' ?
+              <Text className='text-center'>{paymentStatus.amount} from **** **** **** {paymentStatus.lastDigits} ( {paymentStatus.chargeId} ) </Text> :
+              <Text className='text-center'>{paymentStatus.status}</Text>
+            }
+          
         </View>
       </CustomModal>
     </SafeAreaView>
