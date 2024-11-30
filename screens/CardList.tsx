@@ -27,7 +27,7 @@ type OverviewScreenNavigationProps = StackNavigationProp<RootStackParamList, 'Ca
 
 export default function Overview({ route }) {
   // Use Custom Hooks
-  const { getCardsForCustomer, createCharge, loading } = useOmise();
+  const { getCardsForCustomer, createCharge, loading, error } = useOmise();
 
   const [paymentStatus, setPaymentStatus] = useState({});
   // Navigation
@@ -86,6 +86,11 @@ export default function Overview({ route }) {
   // Function
   const handlePayment = async () => {
     const result = await createCharge(route.params.customerId, randomAmount * 100);
+    console.log(result)
+    // let paymentStatus{
+    //   status: failed,
+
+    // }
   };
 
   const randomizeAmount = (min, max) => {
@@ -191,6 +196,11 @@ export default function Overview({ route }) {
             title="Pay"
             onPress={() => handlePayment()}></Button>
           {loading && <ActivityIndicator size="large"></ActivityIndicator>}
+
+          {
+            error && 
+            <Text className='text-red-400 mt-5 text-center font-bold text-lg'>{error}</Text>
+          }
 
           {paymentStatus !== undefined && (
             <Text
