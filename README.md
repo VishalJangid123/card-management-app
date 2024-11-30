@@ -224,15 +224,15 @@ When testing payments, you can use the following **Omise test credit card numbe
     
 - **Declined Payment (Insufficient Funds)**:
     
-    **`4000 0000 0000 9995`** (Visa card, will be declined with insufficient funds)
+    **`4111 1111 1114 0011`** 
     
-- **Expired Card**:
+- **Payment Rejected**:
     
-    **`4000 0000 0000 0069`** (Visa card, expired)
+    **`4111 1111 1111 0014`** 
     
-- **Fraudulent Card**:
+- **Stolen or lost card**:
     
-    **`4000 0000 0000 0119`** (Visa card, flagged as fraudulent)
+    **`4111 1111 1113 0012`** 
     
 
 These test cards will allow you to simulate a range of real-world payment scenarios without the need for actual card details.
