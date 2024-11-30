@@ -177,3 +177,33 @@ This command will pull the RabbitMQ image and run the RabbitMQ container and exp
         - **`5672`** is the default RabbitMQ AMQP protocol port.
         - **`15672`** is the web management console (Access it via **`http://localhost:15672`**) with Username and Password as **`guest`**. This web console help to verify queues, exchanges, and messages being published/consumed
 
+### **Environment Variables Setup 🔑**
+
+You will need two sets of environment variables for the project:
+
+1. **Frontend** (React Native) Environment Variables for Omise Keys and backend URL.
+2. **Backend** (Node.js) Environment Variables for Omise Keys.
+
+### **Frontend (.env.development) 🌐**
+
+Create a **`.env.development`** file in the root directory **`card-management-app`**.
+
+Example **`.env.development`** file:
+
+```
+EXPO_PUBLIC_OMISE_PUBLIC_KEY = pkey_test_.......
+EXPO_PUBLIC_OMISE_SECRET_KEY = skey_test_.......
+EXPO_PUBLIC_BACKEND_URL = http://localhost:3000
+```
+Make sure to replace the actual test keys you get from **Omise Dashboard**.
+
+### **Backend (.env) 🔐**
+
+In the **backend** folder (**`/api`**), create a **`.env`** file that includes the **Omise API keys**.
+
+Example **`.env`** file:
+
+```
+OMISE_PUBLIC_KEY = pkey_test_........
+OMISE_SECRET_KEY = skey_test_........
+```
