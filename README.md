@@ -164,4 +164,16 @@ This section outlines how data flows through the app, from user actions to payme
     Listening for payment status updates...
     ```
     
-   
+
+### **RabbitMQ Setup in Docker 🐇**
+
+1. **Start RabbitMQ in Docker**: RabbitMQ will be used for managing message queues. To start RabbitMQ in a Docker container, run the following commands:
+    
+    ```bash
+    docker pull rabbitmq:management
+    docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
+    ```
+This command will pull the RabbitMQ image and run the RabbitMQ container and exposes the necessary ports.
+        - **`5672`** is the default RabbitMQ AMQP protocol port.
+        - **`15672`** is the web management console (Access it via **`http://localhost:15672`**) with Username and Password as **`guest`**. This web console help to verify queues, exchanges, and messages being published/consumed
+
