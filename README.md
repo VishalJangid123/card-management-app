@@ -207,3 +207,33 @@ Example **`.env`** file:
 OMISE_PUBLIC_KEY = pkey_test_........
 OMISE_SECRET_KEY = skey_test_........
 ```
+
+### **Omise Test Keys 🔑**
+
+To interact with the Omise API in **test mode**, you will need test keys from Omise. You can [Sign up](https://dashboard.omise.co/v2/signup). You can find the keys at [Dashboard](https://dashboard.omise.co/v2/settings)  → Settings → Keys. The keys will containing `_test_` for the test mode.
+- **Secret Key**: **`skey_test_.........`**
+- **Public Key**: **`pkey_test_.........`**
+
+### **Omise Testing Card Numbers 💳**
+
+When testing payments, you can use the following **Omise test credit card numbers**. These cards will simulate different payment scenarios:
+
+- **Successful Payment**:
+    
+    **`4242 4242 4242 4242`** (Visa card, no expiration, any CVC)
+    
+- **Declined Payment (Insufficient Funds)**:
+    
+    **`4000 0000 0000 9995`** (Visa card, will be declined with insufficient funds)
+    
+- **Expired Card**:
+    
+    **`4000 0000 0000 0069`** (Visa card, expired)
+    
+- **Fraudulent Card**:
+    
+    **`4000 0000 0000 0119`** (Visa card, flagged as fraudulent)
+    
+
+These test cards will allow you to simulate a range of real-world payment scenarios without the need for actual card details.
+For more information on Omise APIs, test cards, refer to the [Omise Testing Documentation](https://docs.opn.ooo/).
