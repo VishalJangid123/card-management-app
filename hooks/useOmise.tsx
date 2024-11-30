@@ -37,7 +37,6 @@ const useOmise = () => {
   const createCustomer = async (email: string): Promise<OmiseCustomerResponse> => {
     setLoading(true);
     setError(null);
-
     try {
       const response = await axios.post<OmiseResponse<OmiseCustomerResponse>>(
         'https://api.omise.co/customers',
@@ -151,7 +150,9 @@ const useOmise = () => {
         );
         return paymentResponse.data;
       } catch (err) {
-        setError(err.paymentResponse?.data?.message || 'An error occurred');
+        setError(err.paymentResponse?.data?.message || 
+          err.message || 'An error occurred');
+        return err.message
         throw err;
       } finally {
         setLoading(false);
