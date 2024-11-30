@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useCustomer } from 'context/CustomerContext';
 import { useNavigation } from '@react-navigation/native';
@@ -30,22 +30,25 @@ export default function CustomerList() {
   const [emailError, setEmailError] = useState('');
 
   // Functions
-  const OnAddCustomerButtonClicked = async () => {
-    let isValid = validateEmail(customerEmail);
+  const OnAddCustomerButtonClicked = async (email:string) => {
+    let isValid = validateEmail(email);
     if (isValid) {
       setEmailError('');
-      const customer = await createCustomer(customerEmail);
+      
+      const customer = await createCustomer(email);
       setEmailError(error);
       setCustomerEmail('');
+      setShowAddCustomerModel(false)
     } else {
       setEmailError('Invalid Error');
+      console.log("Invalid Email", email)
     }
   };
 
   const addTestCustomer = () => {
     // This is to add a test customer with email so that we can quickly create customer and add cards
-    setCustomerEmail('test@test.com');
-    OnAddCustomerButtonClicked();
+    console.log("addTestCustomer")
+    OnAddCustomerButtonClicked('test@test.com');
   };
 
   return (
@@ -61,6 +64,9 @@ export default function CustomerList() {
           <View className="flex h-full content-center items-center justify-between gap-7">
             <Text className="p-10 text-lg font-bold">😐 No Customer found.</Text>
 
+            {
+              loading ? <ActivityIndicator />
+              : 
             <View className="item-center flex h-[50%] content-center justify-center ">
               <TouchableOpacity
                 className="elevation-xl rounded-2xl bg-primary p-3"
@@ -78,6 +84,7 @@ export default function CustomerList() {
                 </Text>
               </TouchableOpacity>
             </View>
+}
           </View>
         ) : (
 
@@ -87,28 +94,35 @@ export default function CustomerList() {
             </View>
           <View className="flex h-full justify-start">
             <ScrollView>
+              <View className='gap-5'>
               {customers.map((item, index) => (
                 <TouchableOpacity
                   key={index}
                   onPress={() => navigation.navigate('CardList', { customerId: item.id })}
-                  className="elevation-lg bg-white p-3">
+                  className="elevation-lg bg-white p-4">
                   <Text className="text-lg font-bold">{item.email}</Text>
                 </TouchableOpacity>
               ))}
+              </View>
             </ScrollView>
+
           </View>
           </View>
         )}
       </View>
 
      
-      <TouchableOpacity
+      {
+        customers.length !== 0 && 
+        <TouchableOpacity
         className="elevation-xl absolute bottom-40 left-20 rounded-full bg-primary p-3"
         onPress={() => setShowAddCustomerModel(true)}>
         <Text className="font-FC-bold text-center text-xl font-bold  text-white">
           Add new customer by email
         </Text>
       </TouchableOpacity>
+      }
+      
 
       <CustomModal
         isVisible={showAddCustomerModel}
@@ -121,13 +135,14 @@ export default function CustomerList() {
             label="Customer's Email"
             value={customerEmail}
             onChangeText={(text) => setCustomerEmail(text)}
+            keyboardType='email-address'
           />
           {emailError && emailError.length > 0 && (
             <Text className="item-center font-bold text-red-400">Invalid Email</Text>
           )}
           <Button
-            onPress={() => OnAddCustomerButtonClicked()}
-            title={loading ? 'Saving' : 'Add'}></Button>
+            onPress={() => OnAddCustomerButtonClicked(customerEmail)}
+            title={loading ? 'Adding new customer' : 'Add'}></Button>
         </View>
       </CustomModal>
     </SafeAreaView>
