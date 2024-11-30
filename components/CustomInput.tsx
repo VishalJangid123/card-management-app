@@ -69,6 +69,7 @@ export default function CustomInput({
           onChangeText={onChangeText}
           maxLength={maxLength}
           onBlur={onBlur}
+          autoCapitalize='none'
         />
       )}
       {children}
