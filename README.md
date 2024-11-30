@@ -130,3 +130,38 @@ This section outlines how data flows through the app, from user actions to payme
     npm run ios
     ```
     This will build and launch the app in the iOS simulator.
+
+### **Backend Setup (Node.js with Express & Omise Integration) 💻**
+
+1. **Navigate to the Backend Directory**: Backend is in a separate folder inside the project directory (**`/api`**), navigate to that folder:
+    
+    ```bash
+    cd card-management-app/api
+    ```
+    
+2. **Install Dependencies**: Install all necessary backend dependencies using npm:
+    
+    ```bash
+    npm install
+    ```
+    
+3. **Start the Backend Server**: To start the backend server using **Nodemon** for live-reloading, run:
+    
+    ```bash
+    npm start
+    ```
+    
+    **Note**: Make sure you have **Nodemon** installed globally or locally as part of the dependencies. If it's not installed, you can add it:
+    
+    ```bash
+    npm install --save-dev nodemon
+    ```
+    
+4. **Verify Backend is Running**: Once the backend is running, you should see output like this in your terminal:
+    
+    ```text
+    Server running on http://localhost:3000
+    Listening for payment status updates...
+    ```
+    
+   
