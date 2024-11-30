@@ -43,3 +43,56 @@ Below are some screenshots showcasing the app's UI:
 - **Socket.io**: For real-time communication.
 - **RabbitMQ**: For message queuing and handling scalability.
 - **Docker**: For running RabbitMQ in a containerized environment.
+
+## **Application Flow 🌐**
+
+This section outlines how data flows through the app, from user actions to payment processing, and explains the roles of **Socket.io** and **RabbitMQ** in managing real-time updates and scalable message delivery.
+
+### **1. User Interaction 💬**
+
+### **Customer List Screen:**
+
+- The user can:
+    - Add a new customer by entering their **email**. The app validates the email and calls the **Omise API** to create the customer. Upon success, the app stores the **Omise customer ID** and email in **AsyncStorage** for future use.
+    - Alternatively, the user can create a **default test customer** for quick testing.
+- Once a customer is created or selected, the user can proceed to manage cards or make a payment.
+
+### **Card List Screen:**
+
+- The user can see a list of cards associated with the selected customer.
+- From here, the user can click the **Pay** button to initiate a payment.
+
+### **Add Card Screen:**
+
+- The user adds a credit card to the customer’s account.
+- The app calls the **Omise API** to generate a **payment token** for the card.
+- This token is then linked to the customer, and the card is added to the customer’s profile for future payments.
+
+### **2. Payment Process 💳**
+
+### **Initiating Payment:**
+
+- When the user clicks **Pay**, the frontend (React Native app) sends a **payment request** to the backend, passing along the **customer ID** and payment **amount**.
+- The frontend **subscribes** to updates using **Socket.io**. The **customer ID** is used as a unique identifier for the socket connection, ensuring that the app only receives updates relevant to the current customer.
+
+### **Backend Processing:**
+
+- The backend (Node.js + Express) receives the payment request and calls the **Omise API** to attempt the charge.
+- The backend then sends a **Socket.io** message to the frontend, notifying the app that the payment process has been initialized.
+
+### **Payment Status Update:**
+
+- After processing the payment through Omise, the backend updates the payment status (success or failure).
+- A **Socket.io** message is sent to the frontend in real-time, using the **customer ID** to target the correct client. The frontend receives this update and shows the status of the payment to the user.
+- If the payment is successful, the frontend displays a **success message**. If there is an error (e.g., insufficient funds, card decline), the frontend displays an **error message**.
+
+### **RabbitMQ Integration:**
+
+- To ensure scalability and reliability, the backend places payment-related messages (e.g., payment status) into a **RabbitMQ queue**.
+- The **RabbitMQ queue** ensures that messages are processed in order and without loss, even during high traffic or multiple concurrent requests. This helps the system handle payments and other tasks asynchronously.
+
+### **3. Socket.io Communication 📡**
+
+- **Frontend (React Native)** subscribes to **Socket.io** events using the **customer ID** to ensure each customer receives updates about their payment process in real-time.
+    - The frontend establishes a connection to the backend with the **customer ID**.
+    - **Backend (Node.js)** emits **Socket.io** events specific to that **customer ID**, ensuring that the correct client receives the update (e.g., payment success, failure, or progress).
