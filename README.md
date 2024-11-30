@@ -96,3 +96,37 @@ This section outlines how data flows through the app, from user actions to payme
 - **Frontend (React Native)** subscribes to **Socket.io** events using the **customer ID** to ensure each customer receives updates about their payment process in real-time.
     - The frontend establishes a connection to the backend with the **customer ID**.
     - **Backend (Node.js)** emits **Socket.io** events specific to that **customer ID**, ensuring that the correct client receives the update (e.g., payment success, failure, or progress).
+ 
+ ## **Setup and Testing Instructions 🛠️**
+
+### **Frontend Setup (React Native with React Navigation & Expo) 📱**
+
+1. **Clone the Repository**: First, clone the repository from GitHub and to the project directory.
+    
+    ```bash
+    git clone https://github.com/VishalJangid123/card-management-app.git
+    cd card-management-app
+    ```
+    
+2. **Install Dependencies**: Make sure you have **Node.js** and **npm** installed. Then, install the frontend dependencies.
+    
+    ```bash
+    npm install
+    ```
+    
+3. **Start the React Native App Using Expo**: To run the app on your local device or simulator, you’ll use **Expo Go**. First, make sure you have **Expo Go** installed on your phone or use an emulator.
+    
+    To start the app:
+    
+    ```bash
+    npm start
+    ```
+    
+    This will open the Expo CLI in your terminal, where you can scan the QR code using the **Expo Go** app on your phone (available on **iOS** and **Android**), or choose *i* **"Run in iOS simulator"** or *a* **"Run in Android emulator"**.
+    
+4. **Run the App on iOS**: If you are on macOS and want to run the app directly on an iOS simulator, use:
+    
+    ```bash
+    npm run ios
+    ```
+    This will build and launch the app in the iOS simulator.
