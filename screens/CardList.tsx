@@ -68,7 +68,7 @@ export default function Overview({ route }) {
 
 
     useEffect(() => {
-      const socket = io('http://localhost:3000');  // Change to your server URL
+      const socket = io(process.env.EXPO_PUBLIC_BACKEND_URL);
       const clientId = route.params.customerId
       socket.emit('subscribe', clientId);
 

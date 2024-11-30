@@ -140,8 +140,9 @@ const useOmise = () => {
     setError(null);
     try {
       try {
+        const url = process.env.EXPO_PUBLIC_BACKEND_URL + "/create-charge";
         const paymentResponse = await axios.post(
-          'http://localhost:3000/create-charge', // Replace with your backend server
+          url,
           {
             amount,
             currency: 'thb',
