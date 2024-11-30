@@ -130,7 +130,7 @@ export default function AddCard({ route }) {
             mask="9999 9999 9999 9999"
             keyboardType="numeric"
             error={errors.cardNumber}>
-            <View className="absolute right-6 top-8 flex-row gap-3">
+            <View className="absolute right-6 top-11 flex-row gap-3">
               <Image className="h-10 w-10" source={require('../assets/visa.png')} />
               <Image className="h-10 w-10" source={require('../assets/mastercard.png')} />
               <Image className="h-10 w-10" source={require('../assets/jcb.png')} />
