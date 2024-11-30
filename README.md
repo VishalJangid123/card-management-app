@@ -13,15 +13,19 @@ This project is a **React Native** mobile application that integrates with the
 Below are some screenshots showcasing the app's UI:
 
  
-| Customer List         | Add new customer                                      | Add card |
+| Empty Customer List         | Customer List                                   | Add Customer |
 |---------------------|-------------------------------------------------|-------------------|
-| ![Customer List](https://github.com/user-attachments/assets/4e4002e6-1940-45a6-aeb3-f4b1527b62cf)       |![Customer List - Add Customer](https://github.com/user-attachments/assets/fb2d3bde-0245-436c-b1fd-5376c407becf)    | ![Add Card](https://github.com/user-attachments/assets/13b38048-cd2d-4e18-adc0-a3010c673c79) |
+|   ![Empty Customer List](https://github.com/user-attachments/assets/76b76b1f-b2d8-4cca-9b7b-42f7ac29a8bb) | ![Customer List](https://github.com/user-attachments/assets/4e4002e6-1940-45a6-aeb3-f4b1527b62cf)      |  ![Customer List - Add Customer](https://github.com/user-attachments/assets/fb2d3bde-0245-436c-b1fd-5376c407becf) 
+|
 
 
-| Card List         | Pay                                | Payment Success |
+| No Cards         | Add Card                                | Card List |
 |---------------------|-------------------------------------------------|-------------------|
-| ![Card List](https://github.com/user-attachments/assets/408f6776-2472-410f-8e3e-6be1c60a16f0)       |![Pay Modal](https://github.com/user-attachments/assets/40557d65-aa55-4dd0-b7ca-041d58332046)    | ![Payment success](https://github.com/user-attachments/assets/3ffba911-8407-41a3-9c65-ffcfa97fccc2) |
+|![No Cards](https://github.com/user-attachments/assets/a6167b62-1087-4e6b-a969-f6e88879439b)       | ![Add Card](https://github.com/user-attachments/assets/1a702762-c580-4af1-a0e6-74b4f9cb150e)   |  ![Card List](https://github.com/user-attachments/assets/408f6776-2472-410f-8e3e-6be1c60a16f0)    |
 
+| Pay Modal         | Payment Success                              | Card List |
+|---------------------|-------------------------------------------------|-------------------|
+|![Pay Modal](https://github.com/user-attachments/assets/40557d65-aa55-4dd0-b7ca-041d58332046)      | ![Payment success](https://github.com/user-attachments/assets/3ffba911-8407-41a3-9c65-ffcfa97fccc2)   |  ![Payment Failed](https://github.com/user-attachments/assets/9edaeee8-b855-408c-9bdf-7d4323cca72e) |
 
 ## **Technologies Used ⚙️**
 
@@ -170,8 +174,7 @@ This section outlines how data flows through the app, from user actions to payme
 1. **Start RabbitMQ in Docker**: RabbitMQ will be used for managing message queues. To start RabbitMQ in a Docker container, run the following commands:
     
     ```bash
-    docker pull rabbitmq:management
-    docker run -d -p 5672:5672 -p 15672:15672 --name rabbitmq rabbitmq:management
+    docker run --rm -it --hostname my-rabbit -p 15672:15672 -p 5672:5672 rabbitmq:3-management
     ```
 This command will pull the RabbitMQ image and run the RabbitMQ container and exposes the necessary ports.
         - **`5672`** is the default RabbitMQ AMQP protocol port.
