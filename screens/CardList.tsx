@@ -14,7 +14,7 @@ import {
 import { RootStackParamList } from '../navigation';
 
 import React, { useEffect, useState } from 'react';
-import useOmise from 'useOmise';
+import useOmise from 'hooks/useOmise';
 import { Feather } from '@expo/vector-icons';
 import { getBrandLogo } from 'Constants/GetBrandLogo';
 import CustomModal from 'components/CustomModal';

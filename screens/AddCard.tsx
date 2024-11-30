@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Image, Text, TouchableOpacity, SafeAreaView } from 'react-native';
 import CustomInput from '../components/CustomInput';
-import useOmise from 'useOmise';
+import useOmise from 'hooks/useOmise';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { Button } from 'components/Button';

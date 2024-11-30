@@ -6,7 +6,7 @@ import CustomModal from 'components/CustomModal';
 import CustomInput from 'components/CustomInput';
 import { Button } from 'components/Button';
 import { validateEmail } from 'Utils/Validate';
-import useOmise from 'useOmise';
+import useOmise from 'hooks/useOmise';
 import { Feather } from '@expo/vector-icons';
 
 export default function CustomerList() {

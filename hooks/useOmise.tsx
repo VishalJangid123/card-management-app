@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { useCustomer } from './context/CustomerContext';
+import { useCustomer } from '../context/CustomerContext';
 
 type OmiseResponse<T> = {
   object: string;
